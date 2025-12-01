@@ -41,11 +41,31 @@ newChallenge: $[day :integer][
   write.file "" ~"|name|/full.txt"
 ]
 
+executeChallenge: $[day :integer kind :literal][
+  ensure -> in? kind ['sample 'full]
+  dir: ~"day-|day|"
+  execute.directly ~"arturo ./|dir|/main.art |kind|"
+]
+
 handleNew: $[][
   ensure.that: "Missing argument: <day>" -> not? throws? -> arg\1
   (try [day: <= to :integer arg\1])?
     -> panic "Invalid argument: <day> must be an :integer"
     -> newChallenge day
+]
+
+handleTest: $[][
+  ensure.that: "Missing argument: <day>" -> not? throws? -> arg\1
+  (try [day: <= to :integer arg\1])?
+    -> panic "Invalid argument: <day> must be an :integer"
+    -> executeChallenge day 'sample
+]
+
+handleRun: $[][
+  ensure.that: "Missing argument: <day>" -> not? throws? -> arg\1
+  (try [day: <= to :integer arg\1])?
+    -> panic "Invalid argument: <day> must be an :integer"
+    -> executeChallenge day 'full
 ]
 
 main: $[][
@@ -55,8 +75,8 @@ main: $[][
   case command [
     "help" -> print "Usage: arturo [command]"
     "new" -> handleNew
-    "run" -> print "run arg[1]"
-    "test" -> print "test arg[1]"
+    "run" -> handleRun
+    "test" -> handleTest
     any -> print "Unknown command"
   ]
 ]
