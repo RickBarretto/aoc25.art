@@ -1,0 +1,64 @@
+#! arturo
+
+challengeFile: {
+
+runChallenge: $[content :string][
+    print "Implement your solution...\n"
+    print "Content:"
+    print content
+]
+
+}
+
+mainFile: {
+#! arturo
+
+import ./"challenge"!
+
+ensure.that: "Missing argument: <file>. Allowed: 'sample' | 'full'" 
+   -> not? throws? -> arg\0
+ensure.that: "Invalid argument: <file>. Allowed: 'sample' | 'full'" 
+   [in? arg\0 ["sample" "full"]]
+  
+
+content: read ./~"|arg\0|.txt"
+runChallenge content
+
+}
+
+newChallenge: $[day :integer][
+  name: ~"day-|day|"
+
+  if exists? name [
+    panic "Error: Challenge already exists"
+  ]
+
+  write.directory null name
+  write.file mainFile ~"|name|/main.art"
+  write.file challengeFile ~"|name|/challenge.art"
+  write.file "# Challenge\n\n" ~"|name|/README.md"
+  write.file "" ~"|name|/sample.txt"
+  write.file "" ~"|name|/full.txt"
+]
+
+handleNew: $[][
+  ensure.that: "Missing argument: <day>" -> not? throws? -> arg\1
+  (try [day: <= to :integer arg\1])?
+    -> panic "Invalid argument: <day> must be an :integer"
+    -> newChallenge day
+]
+
+main: $[][
+  ensure.that: "Missing command" -> not? empty? arg
+  command: arg\0
+
+  case command [
+    "help" -> print "Usage: arturo [command]"
+    "new" -> handleNew
+    "run" -> print "run arg[1]"
+    "test" -> print "test arg[1]"
+    any -> print "Unknown command"
+  ]
+]
+
+main
