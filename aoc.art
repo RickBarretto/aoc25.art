@@ -4,6 +4,14 @@
 ;      NEW COMMAND
 ; ======================
 
+challengeReadme: $[day :integer][
+  ~{
+    ## Day |day|
+
+    [Challenge Description](https://adventofcode.com/2025/day/|day|).
+  }
+]
+
 challengeFile: {:
 
 runChallenge: $[content :string][
@@ -35,7 +43,6 @@ challengeText: $[day :integer][
   read.html url | get 'body | get 'main | get 'article | get 'text
     | replace ".\n" ".\n\n"
     | replace ":\n" ":\n\n"
-
 ]
 
 newChallenge: $[day :integer][
@@ -45,14 +52,12 @@ newChallenge: $[day :integer][
     panic "Error: Challenge already exists"
   ]
 
-  readme: challengeText day
-
   write.directory null name
 
   write mainFile ~"|name|/main.art"
   write challengeFile ~"|name|/challenge.art"
 
-  write readme ~"|name|/README.md"
+  write challengeReadme day ~"|name|/README.md"
 
   write "" ~"|name|/sample.txt"
   write "" ~"|name|/full.txt"
