@@ -35,6 +35,7 @@ challengeText: $[day :integer][
   read.html url | get 'body | get 'main | get 'article | get 'text
     | replace ".\n" ".\n\n"
     | replace ":\n" ":\n\n"
+
 ]
 
 newChallenge: $[day :integer][
@@ -44,7 +45,7 @@ newChallenge: $[day :integer][
     panic "Error: Challenge already exists"
   ]
 
-  readme: ~"# Day |day|" | append challengeText day
+  readme: challengeText day
 
   write.directory null name
 
