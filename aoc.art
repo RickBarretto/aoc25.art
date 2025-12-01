@@ -105,6 +105,7 @@ main: $[][
     "run" -> handleRun
     "test" -> handleTest
     "description" -> print challengeText to :integer arg\1
+    "solution" -> print read ./~"day-|arg\1|/challenge.art"
     any -> print "Unknown command"
   ]
 ]

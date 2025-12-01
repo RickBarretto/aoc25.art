@@ -1,0 +1,14 @@
+
+#! arturo
+
+import ./"challenge"!
+
+ensure.that: "Missing argument: <file>. Allowed: 'sample' | 'full'"
+   -> not? throws? -> arg\0
+ensure.that: "Invalid argument: <file>. Allowed: 'sample' | 'full'"
+   [in? arg\0 ["sample" "full"]]
+
+
+content: read ./~"|arg\0|.txt"
+runChallenge content
+

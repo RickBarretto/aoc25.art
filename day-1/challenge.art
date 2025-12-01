@@ -1,0 +1,8 @@
+
+
+runChallenge: $[content :string][
+    print "Implement your solution...\n"
+    print "Content:"
+    print content
+]
+
