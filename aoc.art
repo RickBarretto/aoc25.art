@@ -4,7 +4,7 @@
 ;      NEW COMMAND
 ; ======================
 
-challengeFile: {
+challengeFile: {:
 
 runChallenge: $[content :string][
     print "Implement your solution...\n"
@@ -12,23 +12,30 @@ runChallenge: $[content :string][
     print content
 ]
 
-}
+:}
 
-mainFile: {
+mainFile: {:
 #! arturo
 
 import ./"challenge"!
 
-ensure.that: "Missing argument: <file>. Allowed: 'sample' | 'full'" 
+ensure.that: "Missing argument: <file>. Allowed: 'sample' | 'full'"
    -> not? throws? -> arg\0
-ensure.that: "Invalid argument: <file>. Allowed: 'sample' | 'full'" 
+ensure.that: "Invalid argument: <file>. Allowed: 'sample' | 'full'"
    [in? arg\0 ["sample" "full"]]
-  
+
 
 content: read ./~"|arg\0|.txt"
 runChallenge content
 
-}
+:}
+
+challengeText: $[day :integer][
+  url: ~"https://adventofcode.com/2025/day/|day|"
+  read.html url | get 'body | get 'main | get 'article | get 'text
+    | replace ".\n" ".\n\n"
+    | replace ":\n" ":\n\n"
+]
 
 newChallenge: $[day :integer][
   name: ~"day-|day|"
@@ -37,12 +44,17 @@ newChallenge: $[day :integer][
     panic "Error: Challenge already exists"
   ]
 
+  readme: ~"# Day |day|" | append challengeText day
+
   write.directory null name
-  write.file mainFile ~"|name|/main.art"
-  write.file challengeFile ~"|name|/challenge.art"
-  write.file "# Challenge\n\n" ~"|name|/README.md"
-  write.file "" ~"|name|/sample.txt"
-  write.file "" ~"|name|/full.txt"
+
+  write mainFile ~"|name|/main.art"
+  write challengeFile ~"|name|/challenge.art"
+
+  write readme ~"|name|/README.md"
+
+  write "" ~"|name|/sample.txt"
+  write "" ~"|name|/full.txt"
 ]
 
 handleNew: $[][
@@ -86,6 +98,7 @@ main: $[][
     "new" -> handleNew
     "run" -> handleRun
     "test" -> handleTest
+    "fetch" -> print challengeText to :integer arg\1
     any -> print "Unknown command"
   ]
 ]
