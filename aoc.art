@@ -114,12 +114,27 @@ handleSolution: $[][
     -> print read ./~"day-|day|/challenge.art"
 ]
 
+help: $[][
+  print "Usage: arturo aoc.art [command]"
+  print "Commands:"
+  print "  help"
+  print "  new <day>"
+  print "  run <day>"
+  print "  test <day>"
+  print "  description <day>"
+  print "  solution <day>"
+  print ""
+  print "Examples:"
+  print "  arturo aoc.art new 1"
+  print "  arturo aoc.art run 1"
+]
+
 main: $[][
   ensure.that: "Missing command" -> not? empty? arg
   command: arg\0
 
   case command [
-    "help" -> print "Usage: arturo [command]"
+    "help" -> help
     "new" -> handleNew
     "run" -> handleRun
     "test" -> handleTest
