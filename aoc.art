@@ -95,6 +95,25 @@ handleRun: $[][
     -> executeChallenge day 'full
 ]
 
+
+; ======================
+;    HELPER COMMANDS
+; ======================
+
+handleDescription: $[][
+  ensure.that: "Missing argument: <day>" -> not? throws? -> arg\1
+  (try [day: <= to :integer arg\1])?
+    -> panic "Invalid argument: <day> must be an :integer"
+    -> print challengeText day
+]
+
+handleSolution: $[][
+  ensure.that: "Missing argument: <day>" -> not? throws? -> arg\1
+  (try [day: <= to :integer arg\1])?
+    -> panic "Invalid argument: <day> must be an :integer"
+    -> print read ./~"day-|day|/challenge.art"
+]
+
 main: $[][
   ensure.that: "Missing command" -> not? empty? arg
   command: arg\0
@@ -104,8 +123,8 @@ main: $[][
     "new" -> handleNew
     "run" -> handleRun
     "test" -> handleTest
-    "description" -> print challengeText to :integer arg\1
-    "solution" -> print read ./~"day-|arg\1|/challenge.art"
+    "description" -> handleDescription
+    "solution" -> handleSolution
     any -> print "Unknown command"
   ]
 ]
